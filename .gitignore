@@ -1,0 +1,26 @@
+# ---------- .NET ----------
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+backend/**/appsettings.*.local.json
+
+# ---------- Logs ----------
+logs/
+*.log
+
+# ---------- Node / Angular ----------
+node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.nx/
+npm-debug.log*
+
+# ---------- Secrets / env ----------
+.env
+*.env.local
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db

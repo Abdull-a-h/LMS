@@ -1,0 +1,47 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Create account</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full name</mat-label>
+          <input matInput formControlName="fullName" />
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+            <mat-error>Full name is required (max 120 characters).</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <mat-error>A valid email is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password" />
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <mat-error>Min 8 characters, with at least one uppercase letter and one digit.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <p class="error-text">{{ error() }}</p>
+        }
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || loading()">
+          {{ loading() ? 'Creating…' : 'Register' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <a routerLink="/login">Already have an account? Sign in</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

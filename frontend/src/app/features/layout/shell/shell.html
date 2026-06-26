@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+  <span class="brand">LMS</span>
+
+  <nav class="nav-links">
+    <a mat-button routerLink="/books" routerLinkActive="active">Books</a>
+    <a mat-button routerLink="/authors" routerLinkActive="active">Authors</a>
+
+    @if (isLibrarian()) {
+      <a mat-button routerLink="/members" routerLinkActive="active">Members</a>
+      <a mat-button routerLink="/borrows" routerLinkActive="active">All Borrows</a>
+    } @else {
+      <a mat-button routerLink="/my-borrows" routerLinkActive="active">My Borrows</a>
+      <a mat-button routerLink="/profile" routerLinkActive="active">Profile</a>
+    }
+  </nav>
+
+  <span class="spacer"></span>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon> Logout
+  </button>
+</mat-toolbar>
+
+<main class="content">
+  <router-outlet />
+</main>
