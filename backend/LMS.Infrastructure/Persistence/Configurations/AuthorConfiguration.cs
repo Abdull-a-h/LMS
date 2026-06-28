@@ -8,7 +8,27 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
 {
     public void Configure(EntityTypeBuilder<Author> builder)
     {
-        // TODO: keys, HasMaxLength (Name 150, Biography 1000), HasQueryFilter(x => x.IsActive),
-        //       Books relationship with DeleteBehavior.Restrict.
+        builder.HasKey(a => a.Id);
+
+        builder.Property(a => a.Name)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Property(a => a.Biography)
+            .HasMaxLength(1000);
+
+        builder.Property(a => a.Nationality)
+            .HasMaxLength(100);
+
+        builder.Property(a => a.IsActive)
+            .IsRequired();
+
+        builder.Property(a => a.CreatedAt)
+            .IsRequired();
+
+        // Soft delete: inactive authors are hidden from every query automatically.
+        builder.HasQueryFilter(a => a.IsActive);
+
+        // The Book -> Author relationship (with Restrict) is configured from BookConfiguration.
     }
 }
