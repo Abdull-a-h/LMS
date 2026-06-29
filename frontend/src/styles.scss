@@ -81,3 +81,37 @@ mat-toolbar .brand {
   font-weight: 600;
 }
 
+.page {
+  // The shell's <main class="content"> already provides page padding.
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.form-card {
+  max-width: 640px;
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.actions-col {
+  width: 120px;
+  text-align: right;
+}
+

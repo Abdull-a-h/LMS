@@ -1,2 +1,45 @@
-<h1>Author form</h1>
-<p>TODO: create/edit author (Librarian).</p>
+<div class="page">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ isEdit() ? 'Edit author' : 'New author' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" maxlength="150" />
+          @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <mat-error>Name is required.</mat-error>
+          }
+          @if (form.controls.name.hasError('maxlength')) {
+            <mat-error>Name must not exceed 150 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nationality</mat-label>
+          <input matInput formControlName="nationality" maxlength="100" />
+          @if (form.controls.nationality.hasError('maxlength')) {
+            <mat-error>Nationality must not exceed 100 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Biography</mat-label>
+          <textarea matInput formControlName="biography" rows="5" maxlength="1000"></textarea>
+          @if (form.controls.biography.hasError('maxlength')) {
+            <mat-error>Biography must not exceed 1000 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          <a mat-button routerLink="/authors">Cancel</a>
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || loading()">
+            {{ loading() ? 'Saving…' : (isEdit() ? 'Save changes' : 'Create author') }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
