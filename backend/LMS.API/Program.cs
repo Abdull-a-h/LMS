@@ -67,6 +67,7 @@ builder.Services.AddScoped<IOverdueAlertPublisher, ServiceBusOverdueAlertPublish
 
 // ----- Identity / tokens & current user -----
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 

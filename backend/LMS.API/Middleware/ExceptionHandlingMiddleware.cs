@@ -47,6 +47,7 @@ public class ExceptionHandlingMiddleware
                 TraceId = traceId,
                 Errors = ve.Errors.Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
             },
+            InvalidCredentialsException ic => Build(StatusCodes.Status401Unauthorized, ic.Message, traceId),
             NotFoundException nf => Build(StatusCodes.Status404NotFound, nf.Message, traceId),
             BusinessRuleException br => Build(StatusCodes.Status422UnprocessableEntity, br.Message, traceId),
             UnauthorizedAccessException => Build(StatusCodes.Status403Forbidden, "Forbidden.", traceId),
