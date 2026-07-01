@@ -1,2 +1,78 @@
-<h1>Book form</h1>
-<p>TODO: create/edit book + cover upload (Librarian).</p>
+<div class="page">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ isEdit() ? 'Edit book' : 'New book' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" maxlength="250" />
+          @if (form.controls.title.touched && form.controls.title.hasError('required')) {
+            <mat-error>Title is required.</mat-error>
+          }
+          @if (form.controls.title.hasError('maxlength')) {
+            <mat-error>Title must not exceed 250 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Author</mat-label>
+          <mat-select formControlName="authorId">
+            @for (author of authors(); track author.id) {
+              <mat-option [value]="author.id">{{ author.name }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.authorId.touched && form.controls.authorId.hasError('required')) {
+            <mat-error>Author is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ISBN (13 digits)</mat-label>
+          <input matInput formControlName="isbn" maxlength="13" />
+          @if (form.controls.isbn.touched && form.controls.isbn.hasError('required')) {
+            <mat-error>ISBN is required.</mat-error>
+          }
+          @if (form.controls.isbn.hasError('pattern')) {
+            <mat-error>ISBN must be exactly 13 digits.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Publication year</mat-label>
+            <input matInput type="number" formControlName="publicationYear" />
+            @if (form.controls.publicationYear.invalid) {
+              <mat-error>Enter a valid year (1450–{{ currentYear + 1 }}).</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Total copies</mat-label>
+            <input matInput type="number" formControlName="totalCopies" min="1" />
+            @if (form.controls.totalCopies.invalid) {
+              <mat-error>At least 1 copy is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" maxlength="2000"></textarea>
+          @if (form.controls.description.hasError('maxlength')) {
+            <mat-error>Description must not exceed 2000 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          <a mat-button routerLink="/books">Cancel</a>
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || loading()">
+            {{ loading() ? 'Saving…' : (isEdit() ? 'Save changes' : 'Create book') }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -115,3 +115,108 @@ mat-toolbar .brand {
   text-align: right;
 }
 
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+/* ----- Book catalogue ----- */
+.search-bar {
+  max-width: 480px;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.book-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card .cover img,
+.cover-placeholder {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cover-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mat-sys-surface-container-high);
+}
+
+.cover-placeholder mat-icon {
+  transform: scale(2.5);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.book-card .title {
+  margin: 8px 0 4px;
+  font-size: 1rem;
+}
+
+.book-card .author {
+  margin: 0 0 8px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+/* ----- Book detail ----- */
+.detail-layout {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.detail-cover img,
+.cover-placeholder.large {
+  width: 260px;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 280px;
+}
+
+.detail-info .author {
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 0;
+}
+
+.detail-info .meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  margin: 16px 0;
+}
+
+.detail-info .meta dt {
+  font-weight: 600;
+}
+
+.detail-info .meta dd {
+  margin: 0;
+}
+
+.librarian-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+

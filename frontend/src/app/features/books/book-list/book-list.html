@@ -1,2 +1,72 @@
-<h1>Books</h1>
-<p>TODO: paginated, searchable catalogue with borrow actions.</p>
+<div class="page">
+  <div class="page-header">
+    <h1>Books</h1>
+    @if (isLibrarian()) {
+      <a mat-flat-button color="primary" routerLink="/books/new">
+        <mat-icon>add</mat-icon>
+        New book
+      </a>
+    }
+  </div>
+
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Search by title or ISBN</mat-label>
+      <input matInput [(ngModel)]="keyword" (keyup.enter)="search()" />
+      <button matIconButton matSuffix (click)="search()" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  @if (!loading() && books().length === 0) {
+    <p>No books found.</p>
+  }
+
+  <div class="book-grid">
+    @for (book of books(); track book.id) {
+      <mat-card class="book-card" [routerLink]="['/books', book.id]">
+        <div class="cover">
+          @if (book.coverImageUrl) {
+            <img [src]="book.coverImageUrl" [alt]="book.title" />
+          } @else {
+            <div class="cover-placeholder"><mat-icon>menu_book</mat-icon></div>
+          }
+        </div>
+        <mat-card-content>
+          <h3 class="title">{{ book.title }}</h3>
+          <p class="author">{{ book.authorName }}</p>
+          @if (book.availableCopies > 0) {
+            <mat-chip-set><mat-chip highlighted color="primary">{{ book.availableCopies }} available</mat-chip></mat-chip-set>
+          } @else {
+            <mat-chip-set><mat-chip>Unavailable</mat-chip></mat-chip-set>
+          }
+        </mat-card-content>
+        @if (isLibrarian()) {
+          <mat-card-actions align="end">
+            <a mat-icon-button [routerLink]="['/books', book.id, 'edit']" (click)="$event.stopPropagation()" aria-label="Edit">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button mat-icon-button color="warn" (click)="delete(book, $event)" aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        }
+      </mat-card>
+    }
+  </div>
+
+  @if (totalCount() > 0) {
+    <mat-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[8, 16, 32]"
+      (page)="onPage($event)">
+    </mat-paginator>
+  }
+</div>

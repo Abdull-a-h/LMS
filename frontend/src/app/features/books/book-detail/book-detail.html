@@ -1,2 +1,66 @@
-<h1>Book detail</h1>
-<p>TODO: cover, author, availability, borrow/return.</p>
+<div class="page">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  @if (book(); as b) {
+    <div class="detail-layout">
+      <div class="detail-cover">
+        @if (b.coverImageUrl) {
+          <img [src]="b.coverImageUrl" [alt]="b.title" />
+        } @else {
+          <div class="cover-placeholder large"><mat-icon>menu_book</mat-icon></div>
+        }
+      </div>
+
+      <div class="detail-info">
+        <h1>{{ b.title }}</h1>
+        <p class="author">by {{ b.author.name }}</p>
+
+        <mat-chip-set>
+          @if (b.availableCopies > 0) {
+            <mat-chip highlighted color="primary">{{ b.availableCopies }} of {{ b.totalCopies }} available</mat-chip>
+          } @else {
+            <mat-chip>All {{ b.totalCopies }} copies out</mat-chip>
+          }
+        </mat-chip-set>
+
+        <dl class="meta">
+          <dt>ISBN</dt><dd>{{ b.isbn }}</dd>
+          <dt>Published</dt><dd>{{ b.publicationYear }}</dd>
+        </dl>
+
+        @if (b.description) {
+          <p class="description">{{ b.description }}</p>
+        }
+
+        <!-- Borrow / return actions arrive in Step 5 (uses hasActiveBorrowByCurrentMember). -->
+
+        @if (isLibrarian()) {
+          <div class="librarian-actions">
+            <a mat-stroked-button [routerLink]="['/books', b.id, 'edit']">
+              <mat-icon>edit</mat-icon> Edit
+            </a>
+
+            <button mat-stroked-button (click)="coverInput.click()" [disabled]="uploading()">
+              <mat-icon>image</mat-icon> {{ uploading() ? 'Uploading…' : (b.coverImageUrl ? 'Replace cover' : 'Add cover') }}
+            </button>
+            <input #coverInput type="file" hidden accept="image/*" (change)="onCoverSelected($event)" />
+
+            @if (b.coverImageUrl) {
+              <button mat-stroked-button (click)="removeCover()">
+                <mat-icon>hide_image</mat-icon> Remove cover
+              </button>
+            }
+
+            <button mat-stroked-button color="warn" (click)="deleteBook()">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+          </div>
+        }
+
+        <a mat-button routerLink="/books">← Back to catalogue</a>
+      </div>
+    </div>
+  }
+</div>

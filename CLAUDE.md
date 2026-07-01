@@ -170,10 +170,28 @@ ng serve
 ## Scaffolding status & decisions (as of 2026-06-18)
 
 The full **structure is scaffolded and both projects build clean**. Implementation is being
-filled in feature by feature — handlers, repositories, EF configurations, and infrastructure
-services are stubs (`throw new NotImplementedException()` / `// TODO`); thin controllers,
-`Program.cs` wiring, the exception middleware, auth interceptor, guards, and login/register
-forms are already functional.
+filled in feature by feature — remaining handlers, repositories, and infrastructure
+services are stubs (`throw new NotImplementedException()` / `// TODO`).
+
+**Implementation progress (incremental, one feature per step):**
+- ✅ **Step 1 — Database foundation:** all `IEntityTypeConfiguration` classes, `InitialCreate`
+  migration generated + applied (5 tables, unique indexes on `Members.Email`/`Books.ISBN`,
+  query filters, FK delete rules).
+- ✅ **Step 2 — Authentication:** TokenService (JWT + opaque refresh), BCrypt hashing,
+  Register/Login/Refresh/Logout handlers, Redis revocation + DB rotation, RedisCacheService,
+  Member/RefreshToken repos, librarian seeding (`librarian@lms.local` / `Librarian123`).
+- ✅ **Step 3 — Authors (full-stack):** AuthorRepository, CRUD handlers + queries, validators,
+  AutoMapper profiles; Angular author-list (Material table) + author-form.
+- ✅ **Step 4 — Books (full-stack):** BookRepository (paging/keyword, ISBN uniqueness via
+  `IgnoreQueryFilters`), CRUD + cover handlers, Redis list/detail caching (5/10-min TTL,
+  `RemoveByPrefixAsync("books:")` invalidation), AzureBlobCoverImageService (Azurite),
+  validators; Angular book-list (paginated/searchable), book-detail (cover mgmt), book-form.
+  `HasActiveBorrowByCurrentMember` is intentionally left `false` and computed **outside** the
+  cached detail object in Step 5 (per-member, must not be cached as shared data).
+- ⏭ **Next — Step 5 Borrowing/Returning**, then Members, Overdue alerts, full seeder, polish.
+
+Remaining stubs that boot but throw: the two background services (overdue checker/consumer)
+and the full `DataSeeder` (only the librarian is seeded so far).
 
 Concrete decisions made during scaffolding (keep consistent):
 - **Targets:** .NET 10 (`net10.0`), Angular 21 + Angular Material (azure-blue theme).
@@ -195,9 +213,15 @@ Concrete decisions made during scaffolding (keep consistent):
   once those pieces are implemented.**
 - Frontend: standalone components, Angular 21 naming (no `.component` suffix), lazy `loadComponent`
   routes, signal-based `AuthService`, functional `authInterceptor` + `authGuard`/`librarianGuard`.
+- **Serilog request logging is registered OUTSIDE (before) `ExceptionHandlingMiddleware`** so the
+  HTTP log shows the final status (a `NotFoundException` logs as 404, not 500). The exception
+  middleware still catches every exception and logs it at Error itself.
+- **Azurite** is started with `--skipApiVersionCheck` in `docker-compose.yml` — the Azure SDK
+  targets a newer Storage API version than this Azurite build accepts. Emulator-only; real Azure
+  needs no such flag (still no app-code change to switch to real Azure).
 
-EF migrations have **not** been generated yet (entity configurations are still stubs). Generate the
-initial migration once `IEntityTypeConfiguration` classes are implemented.
+The `InitialCreate` EF migration is generated and applied. Add a new migration after any future
+entity/configuration change.
 
 ## Working conventions for the assistant
 

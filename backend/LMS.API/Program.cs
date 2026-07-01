@@ -129,9 +129,12 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// ----- Pipeline (exception handler first) -----
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// ----- Pipeline -----
+// Request logging sits OUTSIDE the exception handler so the HTTP log reflects the final
+// status code (e.g. a NotFoundException shows as 404, not 500). The exception middleware
+// still catches every unhandled exception and logs it at Error itself.
 app.UseSerilogRequestLogging();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
